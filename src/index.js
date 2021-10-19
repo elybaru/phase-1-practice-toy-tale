@@ -20,11 +20,13 @@ fetch("http://localhost:3000/toys")
 
 function init(toys) {
   toys.forEach(toy => {
-    console.log(toy)
     renderToy(toy);
   });
-  const createToyBttn = document.querySelector(".submit")
-  createToyBttn.addEventListener("submit", createToy)
+  const createToyForm = document.querySelector(".add-toy-form")
+  createToyForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    createToy(event);
+  })
 }
 
 const toyCollectionDiv = document.querySelector("#toy-collection");
@@ -59,14 +61,16 @@ function renderToy(toy) {
 
 }
 
+
+
 function createToy(event) {
-  event.preventDefault();
-  const name = document.querySelector("#input-text").value;
-  const img = document.querySelector("#input-toy-image").value;
+  console.log(event)
+  // const name = document.querySelector("#input-name-input").value;
+  // const img = document.querySelector("#input-toy-image").value;
 
   const toy = {
-    name: name,
-    img: img,
+    name: event.target[0].value,
+    img: event.target[1].value,
     likes: 0
   };
 
@@ -74,6 +78,7 @@ function createToy(event) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Accept: "application/json"
     },
     body: JSON.stringify(toy),
   };
@@ -83,8 +88,10 @@ function createToy(event) {
       return resp.json();
     })
     .then(function (toy) {
+      console.log(toy)
       renderToy(toy)
     })
+
 }
 
 function increaseLikes(toy, likesNum) {
