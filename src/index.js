@@ -60,11 +60,44 @@ function renderToy(toy) {
 }
 
 function createToy(event) {
+  event.preventDefault();
+  const name = document.querySelector("#input-text").value;
+  const img = document.querySelector("#input-toy-image").value;
 
+  const toy = {
+    name: name,
+    img: img,
+    likes: 0
+  };
 
+  const configObj = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(toy),
+  };
+
+  fetch("http://localhost:3000/toys/", configObj)
+    .then(function (resp) {
+      return resp.json();
+    })
+    .then(function (toy) {
+      renderToy(toy)
+    })
 }
 
 function increaseLikes(toy, likesNum) {
-  ++toy.likes;
+  toy.likes++;
   likesNum.textContent = toy.likes
+  fetch(`http://localhost:3000/toys/${toy.id}`, {
+    method: "PATCH",
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: "application/json"
+    },
+    body: JSON.stringify({ likes: toy.likes++ })
+  }
+  )
+
 }
