@@ -23,10 +23,7 @@ function init(toys) {
     renderToy(toy);
   });
   const createToyForm = document.querySelector(".add-toy-form")
-  createToyForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    createToy(event);
-  })
+  createToyForm.addEventListener("submit", createToy);
 }
 
 const toyCollectionDiv = document.querySelector("#toy-collection");
@@ -39,6 +36,7 @@ function renderToy(toy) {
   const img = document.createElement("img");
   img.className = "toy-avatar"
   img.src = toy.image
+  console.log(img, "Here is the image render in renderToy")
 
   const toyName = document.createElement("h2");
   toyName.innerText = toy.name
@@ -64,26 +62,28 @@ function renderToy(toy) {
 
 
 function createToy(event) {
+  event.preventDefault();
   console.log(event)
   // const name = document.querySelector("#input-name-input").value;
   // const img = document.querySelector("#input-toy-image").value;
 
   const toy = {
     name: event.target[0].value,
-    img: event.target[1].value,
+    image: event.target[1].value,
     likes: 0
   };
+  console.log("Here's a long string ", event.target[1].value)
 
   const configObj = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Accept: "application/json"
+      "Accept": "application/json"
     },
     body: JSON.stringify(toy),
   };
 
-  fetch("http://localhost:3000/toys/", configObj)
+  fetch("http://localhost:3000/toys", configObj)
     .then(function (resp) {
       return resp.json();
     })
